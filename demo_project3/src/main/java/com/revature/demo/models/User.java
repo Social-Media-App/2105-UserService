@@ -44,12 +44,12 @@ public class User {
 	@Column(name="password", nullable = false)
 	private String password;
 	
-	@Column(name="password", nullable = false)
-	@ColumnDefault(value="Default")
+	@Column(name="profile_picture", nullable = false)
+	@ColumnDefault(value="'Default.png'")
 	private String profilePicture;
 	
-	@Column(name="password", nullable = false)
-	@ColumnDefault(value="DefaultBackground.png")
+	@Column(name="background_picture", nullable = false)
+	@ColumnDefault(value="'DefaultBackground.png'")
 	private String backgroundPicture;
 	
 	@Column(name="email", nullable = false, unique = true)
