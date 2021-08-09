@@ -52,7 +52,11 @@ public class LoginController {
 	public @ResponseBody User newUser(@RequestBody User user){
 		return userServ.save(user);
 	}
-	
+	/**
+	 * @author zacha
+	 * @param user
+	 * @return User object, with updated password
+	 */
 	@PostMapping(value="/resetpw")
 	public @ResponseBody User resetPW(@RequestBody User user){
 		System.out.println("reset pw");
