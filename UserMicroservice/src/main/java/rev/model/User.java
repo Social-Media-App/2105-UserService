@@ -10,11 +10,13 @@ import javax.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@EqualsAndHashCode
 @Getter
 @Setter
 @NoArgsConstructor
@@ -54,5 +56,16 @@ public class User {
 	
 	@Column(name="email", nullable = false, unique = true)
 	private String email;
+
+	public User(String username, String firstName, String lastName, String password, String email) {
+		super();
+		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.password = password;
+		this.email = email;
+	}
+	
+	
 }
 
