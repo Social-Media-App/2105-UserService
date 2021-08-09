@@ -24,6 +24,13 @@ public class LoginController {
 		this.userServ = userServ;
 	}
 	
+	/**
+	 * @author zacha 
+	 * Takes in a user, only cares about its username and password then if it works
+	 * returns the user it found else it returns a completely null user with -1 as its id
+	 * @param user object
+	 * @return user Object
+	 */
 	@PostMapping(value="/login")
 	public @ResponseBody User login(@RequestBody User user){
 
@@ -35,12 +42,21 @@ public class LoginController {
 		return loguser;
 
 	}
-	
+	/**
+	 * @author zacha
+	 * Creates a new user in the database and returns said user
+	 * @param User object
+	 * @return User object
+	 */
 	@PostMapping(value="/signup")
 	public @ResponseBody User newUser(@RequestBody User user){
 		return userServ.save(user);
 	}
-	
+	/**
+	 * @author zacha
+	 * @param user
+	 * @return User object, with updated password
+	 */
 	@PostMapping(value="/resetpw")
 	public @ResponseBody User resetPW(@RequestBody User user){
 		System.out.println("reset pw");
