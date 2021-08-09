@@ -11,7 +11,29 @@ import rev.model.User;
 @Repository
 public interface UserDao extends JpaRepository<User, Integer>{
 	
+	//////////////////CREATE\\\\\\\\\\\\\\\\\\\\
+	
+	
+	
+	//////////////////READ\\\\\\\\\\\\\\\\\\\\
+	/**
+	 * @author 
+	 * 
+	 * get all user from database
+	 * 
+	 * @param 
+	 * @return 
+	 * 
+	 */
 	public List<User> findAll();
+	
+	
+	
+	//////////////////UPDATE\\\\\\\\\\\\\\\\\\\\
+	
+	
+	//////////////////DELETE\\\\\\\\\\\\\\\\\\\\
+	
 	public void delete(User user);
 	public User findByUserId(int id);
 	public User findByUsername(String username);
