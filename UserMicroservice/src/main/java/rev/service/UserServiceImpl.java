@@ -37,6 +37,8 @@ public class UserServiceImpl implements UserService {
 		userDao.delete(user);
 		
 	}
+	
+	
 
 	@Override
 	public User findByUserId(int id) {
@@ -55,5 +57,4 @@ public class UserServiceImpl implements UserService {
 
 		return userDao.findByUsernameAndPassword(username, password);
 	}
-
 }

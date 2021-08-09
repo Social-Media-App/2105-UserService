@@ -36,6 +36,19 @@ public class LoginController {
 
 	}
 	
+	@PostMapping(value="/signup")
+	public @ResponseBody User newUser(@RequestBody User user){
+		return userServ.save(user);
+	}
+	
+	@PostMapping(value="/resetpw")
+	public @ResponseBody User resetPW(@RequestBody User user){
+		System.out.println("reset pw");
+		User updateuser = userServ.findByUserId(user.getUserId());
+		updateuser.setPassword(user.getPassword());
+		return userServ.save(updateuser);
+	}
+	
 
 }
 
