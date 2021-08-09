@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,12 +26,17 @@ public class UserController {
 		this.userServ = userServ;
 	}
 	
-	@GetMapping(value="/users")
+	@GetMapping(value="/getallusers")
 	public @ResponseBody List<User> getAllUsers(){
 		System.out.println("Finding all users");
 		return userServ.findAll();
 	}
 	
+	@PostMapping(value="/update")
+	public @ResponseBody User newUser(@RequestBody User user){
+		System.out.println("Update User");
+		return userServ.save(user);
+	}
 	
 	
 
