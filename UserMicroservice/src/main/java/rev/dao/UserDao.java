@@ -11,13 +11,12 @@ import rev.model.User;
 @Repository
 public interface UserDao extends JpaRepository<User, Integer>{
 	
-	//////////////DELETE\\\\\\\\\\\\\\
-	/**
-	 * @author zacha
-	 * Deletes a user from database
-	 * @param User to delete
-	 * @return Nothing
-	 */
+	
+	//////////////////UPDATE\\\\\\\\\\\\\\\\\\\\
+	
+	
+	//////////////////DELETE\\\\\\\\\\\\\\\\\\\\
+
 	public void delete(User user);
 
 	
