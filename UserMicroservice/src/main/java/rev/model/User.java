@@ -66,6 +66,10 @@ public class User {
 		this.password = password;
 		this.email = email;
 	}
+
+	public User(String username2, String password2, Object object) {
+
+	}
 	
 	
 }
