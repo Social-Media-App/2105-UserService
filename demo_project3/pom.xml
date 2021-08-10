@@ -8,13 +8,13 @@
 		<version>2.5.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>org</groupId>
-	<artifactId>UserMicroservice</artifactId>
+	<groupId>com.revature</groupId>
+	<artifactId>demo_project3</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>UserMicroservice</name>
-	<description>User microservice</description>
+	<name>demo_project3</name>
+	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 		<spring-cloud.version>2020.0.3</spring-cloud.version>
 	</properties>
 	<dependencies>
@@ -34,6 +34,7 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -50,7 +51,8 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
+		
+			<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 		</dependency>
@@ -59,12 +61,6 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>42.2.23</version>
-		</dependency>
-				<!-- Javax Mail -->
-		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
-			<version>1.6.2</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
@@ -95,5 +91,6 @@
 			</plugin>
 		</plugins>
 	</build>
+
 
 </project>
