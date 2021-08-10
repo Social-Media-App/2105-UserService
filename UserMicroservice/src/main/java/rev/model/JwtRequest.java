@@ -4,6 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * @author Miguel and Eric
+ * 
+ * This is a model that is used to recieve login credentials as they are validated
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

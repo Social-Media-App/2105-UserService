@@ -28,7 +28,14 @@ public class HomeController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
-	
+	/**
+	 * @author Miguel and Eric
+	 * 
+	 * This will be a post endpoint to send the username and password to the authentication server
+	 * 
+	 * @param JwtRequest object
+	 * @return JwtResponse Object
+	 */
 	@PostMapping("/authenticate")
 	public JwtResponse authenticate(@RequestBody JwtRequest jwtRequest) throws Exception {
 
