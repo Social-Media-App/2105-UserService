@@ -90,9 +90,6 @@ public class User {
 
 
 
-	
-	
-
 	public User(String username, String firstName, String lastName, String password, String email) {
 		super();
 		this.username = username;

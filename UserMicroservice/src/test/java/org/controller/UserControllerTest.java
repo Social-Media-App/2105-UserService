@@ -17,7 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import rev.UserMicroserviceApplication;
 import rev.controller.UserController;
+import rev.model.SeeFirst;
 import rev.model.User;
+import rev.service.SeeFirstService;
 import rev.service.UserService;
 
 @SpringBootTest(
@@ -31,6 +33,9 @@ class UserControllerTest {
 	
 	@Mock
 	UserService myServ;
+	
+	@Mock
+	SeeFirstService mySeeFirstServ;
 
 
 	@BeforeEach
@@ -69,6 +74,22 @@ class UserControllerTest {
 		verify(myServ, times(1)).findAll();
 		assertEquals(expectedUser, actualUser.get(0));
 		
+	}
+	
+	@Test 
+	void newSeeFirst() {
+		
+		User expectedUser = new User(0,"GameGrumps", "Grump", "Not", "SoGrump", "WERE", "pic", "bkg-pic", "GG@grump.com");
+		
+		when(myServ.findByUserId((expectedUser.getUserId()))).thenReturn(expectedUser);
+		when(mySeeFirstServ.save(new SeeFirst(myServ.findByUserId(1), expectedUser))).thenReturn(expectedUser);
+		
+		User actualUser = myCont.newSeeFirst(expectedUser);
+		
+		verify(myServ, times(1)).findByUserId(expectedUser.getUserId());	
+		verify(mySeeFirstServ, times(1)).save(new SeeFirst(myServ.findByUserId(1), expectedUser));
+		
+		assertEquals(expectedUser, actualUser);
 	}
 
 

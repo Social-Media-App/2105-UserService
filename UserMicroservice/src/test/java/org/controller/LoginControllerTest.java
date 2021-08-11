@@ -1,26 +1,23 @@
 package org.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import rev.UserMicroserviceApplication;
 import rev.controller.LoginController;
-import rev.controller.UserController;
+import rev.model.JwtRequest;
+import rev.model.JwtResponse;
 import rev.model.User;
 import rev.service.UserService;
 
@@ -35,6 +32,9 @@ class LoginControllerTest {
 	
 	@Mock
 	UserService myServ;
+	
+	@Mock
+	AuthenticationManager authenticationManager;
 
 
 	@BeforeEach
@@ -90,5 +90,35 @@ class LoginControllerTest {
 		verify(myServ, times(1)).findByUsernameAndPassword(initialUser.getUsername(), initialUser.getPassword());
 		assertEquals(-1, actualUser.getUserId());
 	}
+	
+	@Test
+	void resetPW() {
+		
+		User updateUser = new User(0,"GameGrumps", "Grump", "Not", "SoGrump", "WERE", "pic", "bkg-pic", "GG@grump.com");
+		User expectedUser = new User(0,"GameGrumps", "Grump", "Not", "SoGrump", "WERE", "pic", "bkg-pic", "GG@grump.com");
+		
+		when(myServ.findByUserId(updateUser.getUserId())).thenReturn(updateUser);
+		when(myServ.save(updateUser)).thenReturn(updateUser);
+		
+		User actualUser = myCont.resetPW(updateUser);
+		
+		verify(myServ, times(1)).findByUserId(updateUser.getUserId());
+		verify(myServ, times(1)).save(updateUser);
+
+		assertEquals(actualUser, expectedUser);
+	}
+	
+//	@Test
+//	void authenticate() {
+//		
+//		JwtRequest jwtRequest = new JwtRequest("username","password");
+//		
+//		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+//						jwtRequest.getUsername(),
+//						jwtRequest.getPassword()
+//				));
+//		
+//		when(jwtRequest.getUsername()).thenReturn(jwtRequest);
+//	} 
 
 }

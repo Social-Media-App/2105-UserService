@@ -1,7 +1,6 @@
 package rev.controller;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.mail.MessagingException;
 
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,14 +27,10 @@ public class UserController {
 	private UserService userServ;
 	private SeeFirstService seeFirstServ;
 	
-	
-	
-	
 	public UserController(UserService userServ) {
 		super();
 		this.userServ = userServ;
 	}
-
 
 	@Autowired
 	public UserController(UserService userServ, SeeFirstService seeFirstServ) {
@@ -116,15 +112,16 @@ public class UserController {
 	 * @return User object
 	 */
 	
-	@PostMapping(value="/addseefirst")
-	public @ResponseBody User newSeeFirst(@RequestBody User user){
+	public @ResponseBody User newSeeFirst(@RequestHeader("Authorization") String header, @RequestBody User user){
+		header = header.substring(7);
+		header = jwtUtility.getUsernameFromToken(header);
 		user = userServ.findByUserId(user.getUserId());
-		seeFirstServ.save(new SeeFirst(userServ.findByUserId(1), user));
-		
-		
-		return user;
+		seeFirstServ.save(new SeeFirst(userServ.findByUsername(header), user));
+
+		return userServ.findByUsername(header);
 		
 	}
+
 	
 	/**
 	 * Takes in a SeeFirst Id and deletes it
