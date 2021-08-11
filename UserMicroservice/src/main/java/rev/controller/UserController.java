@@ -87,16 +87,6 @@ public class UserController {
 	}
 	
 	/**
-	 * @author zacha
-	 * STILL A WORK IN PROGRESS
-	 * NEEDS JWT
-	 * takes in a user and adds it's id to the list of ids in the JWT
-	 * NEEDS TO UPDATE THE JWT
-	 * @param User object
-	 * @return returns
-	 */
-	
-	/**
 	 * @author Matthew Precilio
 	 * 
 	 * Send an email to reset the password

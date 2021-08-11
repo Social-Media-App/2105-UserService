@@ -47,8 +47,6 @@ public class Group {
 	private User createdByUser;
 	
 	@ManyToMany(cascade= CascadeType.ALL, fetch= FetchType.EAGER, mappedBy = "groupList" )
-	//@JoinColumn(name = "user_id_fk",nullable = false, unique= true)
-	
 	private List<User> members = new ArrayList<>();
 
 	public Group(int groupId, String groupName) {
