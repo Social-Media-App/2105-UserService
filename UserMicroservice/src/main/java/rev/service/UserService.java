@@ -1,6 +1,7 @@
 package rev.service;
 
 import java.util.List;
+import java.util.Set;
 
 import rev.model.User;
 
@@ -16,6 +17,16 @@ public interface UserService {
 	 * 
 	 */
 	public List<User> findAll();
+	
+	/**
+	 * @author zacha
+	 * 
+	 * Gets all User in a set of id
+	 * @param none
+	 * @return Array list of User Objects
+	 * 
+	 */
+	public List<User> findAllById(Set<Integer> ids);
 	/**
 	 * @author zacha
 	 * 

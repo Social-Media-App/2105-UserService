@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import rev.model.SeeFirst;
 import rev.model.User;
+import rev.service.SeeFirstService;
 import rev.service.UserService;
 
 @RestController
@@ -23,7 +25,9 @@ public class LoginController {
 		super();
 		this.userServ = userServ;
 	}
-	
+
+
+
 	/**
 	 * @author zacha 
 	 * Takes in a user, only cares about its username and password then if it works
@@ -64,6 +68,8 @@ public class LoginController {
 		updateuser.setPassword(user.getPassword());
 		return userServ.save(updateuser);
 	}
+	
+	
 	
 
 }

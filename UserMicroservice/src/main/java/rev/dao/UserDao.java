@@ -32,6 +32,7 @@ public interface UserDao extends JpaRepository<User, Integer>{
 	 */	
 	public List<User> findAll();
 	
+	
 	/**
 	 * @author zacha
 	 * Gets User by its Id
@@ -55,6 +56,7 @@ public interface UserDao extends JpaRepository<User, Integer>{
 	 * @return User object
 	 */
 	public User findByUsernameAndPassword(String username, String password);
+	
 	
 	
 
