@@ -1,6 +1,7 @@
 package rev.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.mail.MessagingException;
 
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import rev.model.SeeFirst;
 import rev.model.User;
+import rev.service.SeeFirstService;
 import rev.service.UserService;
 import rev.utilities.RandomToken;
 import rev.utilities.SendingMail;
@@ -22,13 +25,24 @@ import rev.utilities.SendingMail;
 public class UserController {
 	
 	private UserService userServ;
+	private SeeFirstService seeFirstServ;
 	
 	
-	@Autowired
+	
+	
 	public UserController(UserService userServ) {
 		super();
 		this.userServ = userServ;
 	}
+
+
+	@Autowired
+	public UserController(UserService userServ, SeeFirstService seeFirstServ) {
+		super();
+		this.userServ = userServ;
+		this.seeFirstServ = seeFirstServ;
+	}
+	
 	
 	/**
 	 * @author zacha
@@ -53,6 +67,16 @@ public class UserController {
 		System.out.println("Update User");
 		return userServ.save(user);
 	}
+	
+	/**
+	 * @author zacha
+	 * STILL A WORK IN PROGRESS
+	 * NEEDS JWT
+	 * takes in a user and adds it's id to the list of ids in the JWT
+	 * NEEDS TO UPDATE THE JWT
+	 * @param User object
+	 * @return returns
+	 */
 	
 	/**
 	 * @author Matthew Precilio
@@ -82,12 +106,40 @@ public class UserController {
 //			loggy.error("Error sending the mail (controllerUserEmail): ", e);
 			e.printStackTrace();
 		}
+		return 1;	
+	}
+	
+	/**
+	 * Add a new See First using user from JWT and User id sent in
+	 * @author zacha
+	 * @param user only matters about User_id
+	 * @return User object
+	 */
+	
+	@PostMapping(value="/addseefirst")
+	public @ResponseBody User newSeeFirst(@RequestBody User user){
+		user = userServ.findByUserId(user.getUserId());
+		seeFirstServ.save(new SeeFirst(userServ.findByUserId(1), user));
 		
 		
-		return 1;
-		
+		return user;
 		
 	}
+	
+	/**
+	 * Takes in a SeeFirst Id and deletes it
+	 * @author zacha
+	 * @param user only matters about User_id
+	 * @return User object
+	 */
+	@PostMapping(value="/remseefirst")
+	public void RemSeeFirst(@RequestBody User user){
+		user = userServ.findByUserId(user.getUserId());
+		
+		seeFirstServ.delete(seeFirstServ.FindById(user.getUserId()));
+		
+	}
+	
 	
 	
 
