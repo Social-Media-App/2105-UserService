@@ -42,7 +42,6 @@ class LoginControllerTest {
 		myCont = new LoginController(myServ);
 	}
 	
-
 	@Test
 	void newUser() {
 		//ARRANGE
