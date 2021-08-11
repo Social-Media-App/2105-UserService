@@ -71,9 +71,8 @@ public class User {
 	private List<Group> groupList = new ArrayList<>();
 //	private List<User> groupList = new ArrayList<>();
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="createdByUser")
 	private List<Group> myCreatedGroups = new ArrayList<>();
-	
 	
 	
 

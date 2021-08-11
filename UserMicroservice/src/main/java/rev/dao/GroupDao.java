@@ -26,7 +26,7 @@ public interface GroupDao extends JpaRepository<Group, Integer> {
 	 * 
 	 * @return the saved new group
 	 */
-	public Group createGroup(Group newGroup);
+//	public Group save(Group newGroup);
 	
 	//  READ
 	/**
@@ -39,7 +39,7 @@ public interface GroupDao extends JpaRepository<Group, Integer> {
 	 * 
 	 * @return list of all groups
 	 */
-	public List<Group> findAllGroups();
+	public List<Group> findAll();
 	
 	/**
 	 * @author Muhammad_Ibrahim
