@@ -27,7 +27,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name="group")
+@Table(name="Groups")
 public class Group {
 
 	
@@ -41,7 +41,7 @@ public class Group {
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name = "user_id_fk",nullable = false)
-	private User createdById;
+	private User createdByUser;
 	
 	@ManyToMany(cascade= CascadeType.ALL, fetch= FetchType.EAGER )
 	@JoinColumn(name = "user_id_fk",nullable = false, unique= true)

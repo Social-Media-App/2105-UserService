@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -67,7 +68,11 @@ public class User {
 	
 	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name="group_list")
-	private List<User> groupList = new ArrayList<>();
+	private List<Group> groupList = new ArrayList<>();
+//	private List<User> groupList = new ArrayList<>();
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="createdByUser")
+	private List<Group> myCreatedGroups = new ArrayList<>();
 	
 	
 
