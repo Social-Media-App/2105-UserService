@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AuthenticationResponse {
 
-	private final String jwt;
+	private String jwt;
 	
 	public String getJwt() {
         return jwt;
