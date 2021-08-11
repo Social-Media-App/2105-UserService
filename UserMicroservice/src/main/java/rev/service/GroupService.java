@@ -42,7 +42,10 @@ public interface GroupService {
 	 */
 	public Group findByGroupName(String groupName);
 	
+
+	
 	//	UPDATE 
 	
 	//	DELETE
+	public void delete(Group group);
 }

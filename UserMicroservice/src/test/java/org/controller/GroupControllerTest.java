@@ -42,7 +42,7 @@ class GroupControllerTest {
 		System.out.println(initialGroup);
 		
 		// ACT
-		Group actualGroup = myController.createGroup(initialGroup);
+		Group actualGroup = myController.createGroup("person", initialGroup);
 		System.out.println(expectedGroup);
 		
 		// ASSERT

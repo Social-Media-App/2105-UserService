@@ -18,6 +18,14 @@ public interface UserDao extends JpaRepository<User, Integer>{
 	//////////////////DELETE\\\\\\\\\\\\\\\\\\\\
 
 	public void delete(User user);
+	
+	/////////////EXISTS\\\\\\\\\
+	public Boolean existsByUsername(String username);
+	
+	
+	public Boolean existsByEmail(String email);
+	
+	
 
 	
 	

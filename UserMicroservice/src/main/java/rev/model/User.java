@@ -62,6 +62,7 @@ public class User {
 	@Column(name="last_name", nullable = false)
 	private String lastName;
 	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(name="password", nullable = false)
 	private String password;
 	
@@ -76,17 +77,21 @@ public class User {
 	@Column(name="email", nullable = false, unique = true)
 	private String email;
 	
-
-	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@Column(name="reset_token")
+	private String resetToken;
+	
+	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	@JoinColumn(name="group_list")
 	private List<Group> groupList = new ArrayList<>();
 //	private List<User> groupList = new ArrayList<>();
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="createdByUser")
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="createdByUser")
 	private List<Group> myCreatedGroups = new ArrayList<>();
 
 	@OneToMany(mappedBy = "initUser", fetch = FetchType.LAZY)
 	private Set<SeeFirst> seeFirst = new HashSet<>();
+	
 
 
 
@@ -124,6 +129,16 @@ public class User {
 //	public User(String username2, String password2, Object object) {
 //
 //	}
+	
+	//@JsonIgnore
+	public String getPassword() {
+		return this.password;	
+	}
+	
+	//@JsonIgnore
+	public String getResetToken() {
+		return this.resetToken;
+	}
 
 	
 }

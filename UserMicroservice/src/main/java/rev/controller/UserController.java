@@ -9,14 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import rev.model.Group;
 import rev.model.SeeFirst;
 import rev.model.User;
+import rev.service.GroupService;
 import rev.service.SeeFirstService;
 import rev.service.UserService;
+import rev.utilities.JwtUtility;
 import rev.utilities.RandomToken;
 import rev.utilities.SendingMail;
 
@@ -26,6 +30,8 @@ public class UserController {
 	
 	private UserService userServ;
 	private SeeFirstService seeFirstServ;
+	private JwtUtility jwtUtility;
+	private GroupService groupServ;
 	
 	
 	
@@ -36,14 +42,26 @@ public class UserController {
 	}
 
 
-	@Autowired
-	public UserController(UserService userServ, SeeFirstService seeFirstServ) {
+	public UserController(UserService userServ, SeeFirstService seeFirstServ, JwtUtility jwtUtility) {
 		super();
 		this.userServ = userServ;
 		this.seeFirstServ = seeFirstServ;
+		this.jwtUtility = jwtUtility;
 	}
 	
 	
+	
+	@Autowired
+	public UserController(UserService userServ, SeeFirstService seeFirstServ, JwtUtility jwtUtility,
+			GroupService groupServ) {
+		super();
+		this.userServ = userServ;
+		this.seeFirstServ = seeFirstServ;
+		this.jwtUtility = jwtUtility;
+		this.groupServ = groupServ;
+	}
+
+
 	/**
 	 * @author zacha
 	 * 
@@ -63,7 +81,7 @@ public class UserController {
 	 * @return returns the changed user
 	 */
 	@PostMapping(value="/update")
-	public @ResponseBody User updateUser(@RequestBody User user){
+	public @ResponseBody User updateUser(@RequestHeader("Authorization") String header, @RequestBody User user){
 		System.out.println("Update User");
 		return userServ.save(user);
 	}
@@ -117,12 +135,13 @@ public class UserController {
 	 */
 	
 	@PostMapping(value="/addseefirst")
-	public @ResponseBody User newSeeFirst(@RequestBody User user){
+	public @ResponseBody User newSeeFirst(@RequestHeader("Authorization") String header, @RequestBody User user){
+		header = header.substring(7);
+		header = jwtUtility.getUsernameFromToken(header);
 		user = userServ.findByUserId(user.getUserId());
-		seeFirstServ.save(new SeeFirst(userServ.findByUserId(1), user));
-		
-		
-		return user;
+		seeFirstServ.save(new SeeFirst(userServ.findByUsername(header), user));
+
+		return userServ.findByUsername(header);
 		
 	}
 	
@@ -139,6 +158,25 @@ public class UserController {
 		seeFirstServ.delete(seeFirstServ.FindById(user.getUserId()));
 		
 	}
+	
+	/**
+	 * @author zacha
+	 * @param header JWT with username
+	 * @param group	Group to be joining
+	 * @return
+	 */
+	@GetMapping(value="/joingroup")
+	public @ResponseBody User getByGroupName(@RequestHeader("Authorization") String header, @RequestBody Group group){
+		System.out.println("Joining A group");
+		header = header.substring(7);
+		header = jwtUtility.getUsernameFromToken(header);
+		User user = userServ.findByUsername(header);
+		List<Group> groups = user.getGroupList();
+		groups.add(groupServ.findByGroupName(group.getGroupName()));
+		user.setGroupList(groups);
+		return userServ.save(user);
+	}
+	
 	
 	
 	

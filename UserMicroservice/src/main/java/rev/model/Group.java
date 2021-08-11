@@ -42,19 +42,37 @@ public class Group {
 	@Column(name= "group_name", nullable= false, unique= true)
 	private String groupName;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@ManyToOne(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	@JoinColumn(name = "user_id_fk",nullable = false)
 	private User createdByUser;
 	
-	@ManyToMany(cascade= CascadeType.ALL, fetch= FetchType.EAGER )
-	@JoinColumn(name = "user_id_fk",nullable = false, unique= true)
-	private List<User> memberId = new ArrayList<>();
+	@ManyToMany(cascade= CascadeType.ALL, fetch= FetchType.EAGER, mappedBy = "groupList" )
+	//@JoinColumn(name = "user_id_fk",nullable = false, unique= true)
+	
+	private List<User> members = new ArrayList<>();
 
 	public Group(int groupId, String groupName) {
 		super();
 		this.groupId = groupId;
 		this.groupName = groupName;
 	
+	}
+
+	public Group(String groupName) {
+		super();
+		this.groupName = groupName;
+	}
+	
+	public String getCreatedByUser() {
+		return createdByUser.getUsername();
+	}
+	
+	public List<String> getMembers() {
+		List<String> names = new ArrayList<>();
+		for(User member : members)
+			names.add(member.getUsername());
+			
+		return names;
 	}
 
 	

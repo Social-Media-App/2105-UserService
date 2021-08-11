@@ -75,6 +75,10 @@ public interface UserService {
 	 * @return none
 	 * 
 	 */
-	public void delete(User user);	
+	public void delete(User user);
+	
+	
+	public Boolean existsByUserName(String userName);
+	public Boolean existsByEmail(String email);
 
 }
