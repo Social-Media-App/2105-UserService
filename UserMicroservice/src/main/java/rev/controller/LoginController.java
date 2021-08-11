@@ -90,6 +90,7 @@ public class LoginController {
 	 */
 	@PostMapping(value="/login")
 	public @ResponseBody User login(@RequestBody User user){
+		
 
 		User loguser = userServ.findByUsernameAndPassword(user.getUsername(),user.getPassword());
 		if (loguser == null) {
@@ -107,6 +108,9 @@ public class LoginController {
 	 */
 	@PostMapping(value="/signup")
 	public @ResponseBody User newUser(@RequestBody User user){
+		System.out.println(user);
+		if (userServ.existsByUserName(user.getUsername()) && userServ.existsByEmail(user.getEmail()))
+			return new User(-1);
 		return userServ.save(user);
 	}
 	/**

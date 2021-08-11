@@ -19,8 +19,10 @@ import rev.UserMicroserviceApplication;
 import rev.controller.UserController;
 import rev.model.SeeFirst;
 import rev.model.User;
+import rev.service.GroupService;
 import rev.service.SeeFirstService;
 import rev.service.UserService;
+import rev.utilities.JwtUtility;
 
 @SpringBootTest(
 	    classes = UserMicroserviceApplication.class
@@ -31,16 +33,22 @@ class UserControllerTest {
 	
 	UserController myCont;
 	
+	
 	@Mock
 	UserService myServ;
 	
 	@Mock
 	SeeFirstService mySeeFirstServ;
+	
+	@Mock
+	JwtUtility jwtUtility;
 
+	@Mock
+	GroupService groupServ;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		myCont = new UserController(myServ);
+		myCont = new UserController(myServ, mySeeFirstServ, jwtUtility, groupServ);
 	}
 
 
@@ -52,7 +60,7 @@ class UserControllerTest {
 		when(myServ.save(initialUser)).thenReturn(initialUser);
 		System.out.println(initialUser);
 		//ACT
-		User actualUser = myCont.updateUser(initialUser);
+		User actualUser = myCont.updateUser(null, initialUser);
 		System.out.println(expectedUser);
 		//ASSERT
 		verify(myServ, times(1)).save(initialUser);
@@ -76,23 +84,28 @@ class UserControllerTest {
 		
 	}
 	
+	/**
+	 * @author Miguel Leon
+	 * Junit test for the newSeeFirst method
+	 */
 	@Test 
 	void newSeeFirst() {
-		
 		User expectedUser = new User(0,"GameGrumps", "Grump", "Not", "SoGrump", "WERE", "pic", "bkg-pic", "GG@grump.com");
 		
-		when(myServ.findByUserId((expectedUser.getUserId()))).thenReturn(expectedUser);
-		when(mySeeFirstServ.save(new SeeFirst(myServ.findByUserId(1), expectedUser))).thenReturn(expectedUser);
+		String header = "stringholder";
 		
-		User actualUser = myCont.newSeeFirst(expectedUser);
+		when(myServ.findByUserId((expectedUser.getUserId()))).thenReturn(expectedUser);
+		when(jwtUtility.getUsernameFromToken(header.substring(7))).thenReturn("String");
+		when(myServ.findByUsername("String")).thenReturn(expectedUser);
+		when(mySeeFirstServ.save(new SeeFirst(myServ.findByUsername("String"), expectedUser))).thenReturn(null);
+		
+		User actualUser = myCont.newSeeFirst(header, expectedUser);
 		
 		verify(myServ, times(1)).findByUserId(expectedUser.getUserId());	
-		verify(mySeeFirstServ, times(1)).save(new SeeFirst(myServ.findByUserId(1), expectedUser));
+		verify(mySeeFirstServ, times(1)).save(new SeeFirst(myServ.findByUsername("String"), expectedUser));
+		verify(jwtUtility, times(1)).getUsernameFromToken(header.substring(7));
 		
 		assertEquals(expectedUser, actualUser);
 	}
-
-
-
 
 }

@@ -91,6 +91,10 @@ class LoginControllerTest {
 		assertEquals(-1, actualUser.getUserId());
 	}
 	
+	/**
+	 * @author Miguel Leon
+	 * Junit test for the resetPW method
+	 */
 	@Test
 	void resetPW() {
 		

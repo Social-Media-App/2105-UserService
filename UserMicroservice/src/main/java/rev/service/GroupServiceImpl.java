@@ -93,5 +93,21 @@ public class GroupServiceImpl implements GroupService {
 		// TODO Auto-generated method stub
 		return groupDao.findByGroupName(groupName);
 	}
+	
+	/**
+	 * @author zacha
+	 * Calls the user dao to delete a specific group from the database
+	 * 
+	 * @Param group, the group that is to be deleted
+	 * 
+	 */
+	@Override
+	public void delete(Group group) {
+		// TODO Auto-generated method stub
+		groupDao.delete(group);
+	}
+	
+	
+	
 
 }

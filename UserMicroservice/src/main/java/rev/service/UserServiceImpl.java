@@ -29,8 +29,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User save(User user) {
-		// TODO Auto-generated method stub
 		return userDao.save(user);
+
 	}
 
 	@Override
@@ -61,5 +61,17 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> findAllById(Set<Integer> ids) {
 		return userDao.findAllById(ids);
+	}
+
+	@Override
+	public Boolean existsByUserName(String userName) {
+		return userDao.existsByUsername(userName);
+		
+	}
+
+	@Override
+	public Boolean existsByEmail(String email) {
+		return userDao.existsByUsername(email);
+		
 	}
 }

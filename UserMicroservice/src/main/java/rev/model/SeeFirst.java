@@ -52,7 +52,7 @@ public class SeeFirst {
 	
 	public User reducedUser(User user) {
 		user.setSeeFirst(null);
-		user.setPassword(" ");
+		user.setPassword(" ");	
 		return user;
 		
 	}
