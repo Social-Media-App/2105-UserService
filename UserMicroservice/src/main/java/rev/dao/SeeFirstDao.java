@@ -9,6 +9,14 @@ import rev.model.User;
 @Repository
 public interface SeeFirstDao extends JpaRepository<SeeFirst, Integer> {
 	
+	/////READ\\\\\\
+	
+	
+	/**
+	 * @author zacha
+	 * @param id
+	 * @return See First
+	 */
 	public SeeFirst findBySeeFirstId(int id);
 
 }

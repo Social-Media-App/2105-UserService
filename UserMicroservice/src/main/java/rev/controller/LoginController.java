@@ -3,30 +3,83 @@ package rev.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import rev.model.JwtRequest;
+import rev.model.JwtResponse;
 import rev.model.SeeFirst;
 import rev.model.User;
+import rev.service.MyUserDetailsService;
 import rev.service.SeeFirstService;
 import rev.service.UserService;
+import rev.utilities.JwtUtility;
 
 @RestController
 @RequestMapping("/login-service")
 public class LoginController {
 	
 	private UserService userServ;
+
+	private JwtUtility jwtUtility;
+
+	private AuthenticationManager authenticationManager;
+
+	private MyUserDetailsService userDetailsService;
 	
-	@Autowired
+	
+	
 	public LoginController(UserService userServ) {
 		super();
 		this.userServ = userServ;
 	}
 
+	@Autowired
+	public LoginController(UserService userServ, JwtUtility jwtUtility, AuthenticationManager authenticationManager,
+			MyUserDetailsService userDetailsService) {
+		super();
+		this.userServ = userServ;
+		this.jwtUtility = jwtUtility;
+		this.authenticationManager = authenticationManager;
+		this.userDetailsService = userDetailsService;
+	}
 
+	/**
+	 * @author Miguel and Eric
+	 * 
+	 * This will be a post endpoint to send the username and password to the authentication server
+	 * 
+	 * @param JwtRequest object
+	 * @return JwtResponse Object
+	 */
+	@PostMapping("/authenticate")
+	public JwtResponse authenticate(@RequestBody JwtRequest jwtRequest) throws Exception {
+
+		try {
+		authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(
+						jwtRequest.getUsername(),
+						jwtRequest.getPassword()
+				)
+		);
+		}catch(BadCredentialsException e) {
+			throw new Exception("Invalid credentials", e);
+		}
+		
+		final UserDetails userDetails = 
+				userDetailsService.loadUserByUsername(jwtRequest.getUsername());
+		final String token =
+				jwtUtility.generateToken(userDetails);
+		
+		return new JwtResponse(token);
+	}
 
 	/**
 	 * @author zacha 

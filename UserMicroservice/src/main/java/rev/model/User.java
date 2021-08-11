@@ -100,7 +100,6 @@ public class User {
 		this.password = password;
 		this.email = email;
 	}
-
 	public User(int userId, String username, String firstName, String middleName, String lastName, String password,
 			String profilePicture, String backgroundPicture, String email) {
 		super();
@@ -119,5 +118,9 @@ public class User {
 		super();
 		this.userId = userId;
 	}	
+//	public User(String username2, String password2, Object object) {
+//
+//	}
+	
 }
 
