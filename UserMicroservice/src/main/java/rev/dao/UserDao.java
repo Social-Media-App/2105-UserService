@@ -20,9 +20,19 @@ public interface UserDao extends JpaRepository<User, Integer>{
 	public void delete(User user);
 	
 	/////////////EXISTS\\\\\\\\\
+	
+	/**
+	 * @author zacha
+	 * @param string username
+	 * @return returns boolean based on if exists
+	 */
 	public Boolean existsByUsername(String username);
 	
-	
+	/**
+	 * @author zacha
+	 * @param string email
+	 * @return returns boolean based on if exists
+	 */
 	public Boolean existsByEmail(String email);
 	
 	

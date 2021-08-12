@@ -1,6 +1,9 @@
 package rev.controller;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
+import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +24,9 @@ import rev.service.MyUserDetailsService;
 import rev.service.SeeFirstService;
 import rev.service.UserService;
 import rev.utilities.JwtUtility;
+import rev.utilities.RandomToken;
+import rev.utilities.SendingMail;
+import rev.utilities.ToEncrypted;
 
 @RestController
 @RequestMapping("/login-service")
@@ -61,6 +67,17 @@ public class LoginController {
 	 */
 	@PostMapping("/authenticate")
 	public JwtResponse authenticate(@RequestBody JwtRequest jwtRequest) throws Exception {
+		byte[] help = ToEncrypted.createSalt();
+		System.out.println(help);
+		System.out.println(ToEncrypted.generateHash(jwtRequest.getPassword(), help));
+		
+		User tempUser = userServ.findByUsername(jwtRequest.getUsername());
+		try {
+			jwtRequest.setPassword(ToEncrypted.generateHash(jwtRequest.getPassword(), tempUser.getSalt()));
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		try {
 		authenticationManager.authenticate(
@@ -90,8 +107,13 @@ public class LoginController {
 	 */
 	@PostMapping(value="/login")
 	public @ResponseBody User login(@RequestBody User user){
-		
-
+		User tempUser = userServ.findByUsername(user.getUsername());
+		try {
+			user.setPassword(ToEncrypted.generateHash(user.getPassword(), tempUser.getSalt()));
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		User loguser = userServ.findByUsernameAndPassword(user.getUsername(),user.getPassword());
 		if (loguser == null) {
 			loguser = new User();
@@ -105,12 +127,20 @@ public class LoginController {
 	 * Creates a new user in the database and returns said user
 	 * @param User object
 	 * @return User object
+	 * @throws NoSuchAlgorithmException 
 	 */
 	@PostMapping(value="/signup")
 	public @ResponseBody User newUser(@RequestBody User user){
 		System.out.println(user);
 		if (userServ.existsByUserName(user.getUsername()) && userServ.existsByEmail(user.getEmail()))
 			return new User(-1);
+		user.setSalt(ToEncrypted.createSalt());
+		try {
+			user.setPassword(ToEncrypted.generateHash(user.getPassword(), user.getSalt()));
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return userServ.save(user);
 	}
 	/**
@@ -122,8 +152,42 @@ public class LoginController {
 	public @ResponseBody User resetPW(@RequestBody User user){
 		System.out.println("reset pw");
 		User updateuser = userServ.findByUserId(user.getUserId());
-		updateuser.setPassword(user.getPassword());
-		return userServ.save(updateuser);
+		if(updateuser.getResetToken().equals(user.getResetToken()))
+		{
+			try {
+				updateuser.setPassword(ToEncrypted.generateHash(user.getPassword(), updateuser.getSalt()));
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			}
+			updateuser.setResetToken(RandomToken.randomToken());
+			return userServ.save(updateuser);
+		}
+		return new User(-1);
+	}
+	
+	@PostMapping(value="/send-email")
+	public Integer sendEmail(@RequestBody User username) {
+		System.out.println(username);
+		User forgotPassUser = userServ.findByUsername(username.getUsername());
+		if(forgotPassUser == null) return -1;
+		String token = RandomToken.randomToken();
+		forgotPassUser.setResetToken(token);
+		userServ.save(forgotPassUser);
+		//
+		/* add logic to change stored token */
+		//
+		try {
+			//Passes email and the session's token to SendEmail class
+			//this sends the reset password to the email + the token for security verification
+			SendingMail.sendMail(forgotPassUser.getEmail(), forgotPassUser.getUsername(),token);
+			
+//			loggy.info("A token has been sent to " + forgotPassUser.getEmail());
+		} catch (MessagingException e) {
+			System.out.println("Error occured");
+//			loggy.error("Error sending the mail (controllerUserEmail): ", e);
+			e.printStackTrace();
+		}
+		return 1;	
 	}
 	
 	

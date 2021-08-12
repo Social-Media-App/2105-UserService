@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.JoinColumn;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,6 +20,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -65,6 +67,10 @@ public class User {
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(name="password", nullable = false)
 	private String password;
+	
+	@ElementCollection
+    @OrderColumn(name = "user_salt", nullable = false)
+    private byte[] salt;
 	
 	@Column(name="profile_picture", nullable = false)
 	@ColumnDefault(value="'Default.png'")
@@ -120,8 +126,43 @@ public class User {
 		this.backgroundPicture = backgroundPicture;
 		this.email = email;
 	}
+	
+	
+	public User(int userId, String username, String firstName, String middleName, String lastName, String password,
+			byte[] salt, String profilePicture, String backgroundPicture, String email) {
+		super();
+		this.userId = userId;
+		this.username = username;
+		this.firstName = firstName;
+		this.middleName = middleName;
+		this.lastName = lastName;
+		this.password = password;
+		this.salt = salt;
+		this.profilePicture = profilePicture;
+		this.backgroundPicture = backgroundPicture;
+		this.email = email;
+	}
 
+	
 
+	public User(int userId, String username, String firstName, String middleName, String lastName, String password,
+			byte[] salt, String profilePicture, String backgroundPicture, String email, String resetToken) {
+		super();
+		this.userId = userId;
+		this.username = username;
+		this.firstName = firstName;
+		this.middleName = middleName;
+		this.lastName = lastName;
+		this.password = password;
+		this.salt = salt;
+		this.profilePicture = profilePicture;
+		this.backgroundPicture = backgroundPicture;
+		this.email = email;
+		this.resetToken = resetToken;
+	}
+	
+	
+	
 	public User(int userId) {
 		super();
 		this.userId = userId;
@@ -139,6 +180,16 @@ public class User {
 	public String getResetToken() {
 		return this.resetToken;
 	}
+	
+	@JsonIgnore
+	public byte[] getSalt() {
+		return salt;
+	}
+
+
+
+
+
 
 	
 }

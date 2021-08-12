@@ -74,18 +74,5 @@ public class Group {
 	}
 
 	
-	
-	
-	
-	
-	
-//	@JoinColumn(name = "user_id_fk",nullable = false)
-//	@OneToOne(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
-//	private int groupAdmin;
-	
-//	private String groupSummary;
-//	
-//	private int createdAtTime;
-	
  
 }
