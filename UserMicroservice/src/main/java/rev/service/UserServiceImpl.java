@@ -1,5 +1,6 @@
 package rev.service;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Set;
 
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import rev.dao.UserDao;
 import rev.model.User;
+import rev.utilities.RandomToken;
+import rev.utilities.ToEncrypted;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -49,7 +52,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findByUsername(String username) {
 		// TODO Auto-generated method stub
-		System.out.println("im here");
 		return userDao.findByUsername(username);
 	}
 
@@ -74,5 +76,23 @@ public class UserServiceImpl implements UserService {
 	public Boolean existsByEmail(String email) {
 		return userDao.existsByUsername(email);
 		
+	}
+
+	@Override
+	public int resetPass(User userWhoForgotPass) {
+		User matchingUser = userDao.findByUsername(userWhoForgotPass.getUsername());
+		if(matchingUser == null)return -1;
+		if(!userWhoForgotPass.getResetToken().equals(matchingUser.getResetToken()))return -2;
+		try {
+			String hashedPass = ToEncrypted.generateHash(userWhoForgotPass.getPassword(), matchingUser.getSalt());
+			if(hashedPass.equals(matchingUser.getPassword())) return -3;
+			matchingUser.setPassword(hashedPass);
+			String resetToken = RandomToken.randomToken();
+			matchingUser.setResetToken(resetToken);
+			userDao.save(matchingUser);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return 1;
 	}
 }
