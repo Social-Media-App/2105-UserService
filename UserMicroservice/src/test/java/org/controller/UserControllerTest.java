@@ -47,7 +47,7 @@ class UserControllerTest {
 		when(myServ.save(initialUser)).thenReturn(initialUser);
 		System.out.println(initialUser);
 		//ACT
-		User actualUser = myCont.updateUser(initialUser);
+		User actualUser = myCont.updateUser(null, initialUser);
 		System.out.println(expectedUser);
 		//ASSERT
 		verify(myServ, times(1)).save(initialUser);

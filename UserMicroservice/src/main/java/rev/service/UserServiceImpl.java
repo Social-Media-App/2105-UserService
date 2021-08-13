@@ -1,6 +1,7 @@
 package rev.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,14 +29,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User save(User user) {
-		// TODO Auto-generated method stub
 		return userDao.save(user);
+
 	}
 
 	@Override
 	public void delete(User user) {
 		userDao.delete(user);
-		
 	}
 	
 	
@@ -56,5 +56,22 @@ public class UserServiceImpl implements UserService {
 	public User findByUsernameAndPassword(String username, String password) {
 
 		return userDao.findByUsernameAndPassword(username, password);
+	}
+
+	@Override
+	public List<User> findAllById(Set<Integer> ids) {
+		return userDao.findAllById(ids);
+	}
+
+	@Override
+	public Boolean existsByUserName(String userName) {
+		return userDao.existsByUsername(userName);
+		
+	}
+
+	@Override
+	public Boolean existsByEmail(String email) {
+		return userDao.existsByUsername(email);
+		
 	}
 }

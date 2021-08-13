@@ -18,6 +18,24 @@ public interface UserDao extends JpaRepository<User, Integer>{
 	//////////////////DELETE\\\\\\\\\\\\\\\\\\\\
 
 	public void delete(User user);
+	
+	/////////////EXISTS\\\\\\\\\
+	
+	/**
+	 * @author zacha
+	 * @param string username
+	 * @return returns boolean based on if exists
+	 */
+	public Boolean existsByUsername(String username);
+	
+	/**
+	 * @author zacha
+	 * @param string email
+	 * @return returns boolean based on if exists
+	 */
+	public Boolean existsByEmail(String email);
+	
+	
 
 	
 	
@@ -31,6 +49,7 @@ public interface UserDao extends JpaRepository<User, Integer>{
 	 * 
 	 */	
 	public List<User> findAll();
+	
 	
 	/**
 	 * @author zacha
@@ -55,6 +74,7 @@ public interface UserDao extends JpaRepository<User, Integer>{
 	 * @return User object
 	 */
 	public User findByUsernameAndPassword(String username, String password);
+	
 	
 	
 
