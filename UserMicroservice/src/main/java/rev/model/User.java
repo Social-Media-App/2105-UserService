@@ -66,6 +66,13 @@ public class User {
 		this.password = password;
 		this.email = email;
 	}
+
+	public User(String username) {
+		super();
+		this.username = username;
+	}
+	
+	
 	
 	
 }

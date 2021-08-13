@@ -3,6 +3,7 @@ package rev.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import rev.model.User;
 import rev.service.UserService;
 
 @RestController
+@CrossOrigin(origins="http://localhost:3000", allowCredentials="true")
 @RequestMapping("/login-service")
 public class LoginController {
 	
