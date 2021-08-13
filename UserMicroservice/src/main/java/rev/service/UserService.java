@@ -1,6 +1,7 @@
 package rev.service;
 
 import java.util.List;
+import java.util.Set;
 
 import rev.model.User;
 
@@ -16,6 +17,16 @@ public interface UserService {
 	 * 
 	 */
 	public List<User> findAll();
+	
+	/**
+	 * @author zacha
+	 * 
+	 * Gets all User in a set of id
+	 * @param none
+	 * @return Array list of User Objects
+	 * 
+	 */
+	public List<User> findAllById(Set<Integer> ids);
 	/**
 	 * @author zacha
 	 * 
@@ -55,6 +66,20 @@ public interface UserService {
 	 */
 	public User save(User user);
 	
+	//////////////UPDATTE\\\\\\\\\\\\\\
+	/**
+	 * @author Matthew
+	 * 
+	 * Accepts a user object containing a username, password
+	 * and token. If user exists and tokens match, password will be reset.
+	 * 
+	 * @param User
+	 * @return 1= success, -1= no matching user, -2= invalid token, -3= same password
+	 */
+	public int resetPass(User userWhoForgotPass);
+	
+	
+	
 	//////////////DELETE\\\\\\\\\\\\\\
 	/**
 	 * @author zacha
@@ -64,6 +89,10 @@ public interface UserService {
 	 * @return none
 	 * 
 	 */
-	public void delete(User user);	
+	public void delete(User user);
+	
+	
+	public Boolean existsByUserName(String userName);
+	public Boolean existsByEmail(String email);
 
 }

@@ -21,6 +21,15 @@ import rev.model.User;
 import rev.service.UserService;
 import rev.service.UserServiceImpl;
 
+/**
+ * 
+ * @author Muhammad_Ibrahim
+ * 
+ * Testing the User service and all test cases have self documenting names
+ * 
+ * 
+ *
+ */
 @SpringBootTest(classes = UserMicroserviceApplication.class)
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
