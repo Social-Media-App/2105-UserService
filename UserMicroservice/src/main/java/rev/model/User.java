@@ -1,18 +1,11 @@
 package rev.model;
 
 import java.util.ArrayList;
-<<<<<<< HEAD
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-
-=======
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
->>>>>>> 15e7e91b11090bfb4d046836710a3f3bdabc1e95
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.Entity;
@@ -27,8 +20,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -49,7 +40,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name="Users")
-public class User implements UserDetails {
+public class User {
 
 	
 	@Id
@@ -82,52 +73,6 @@ public class User implements UserDetails {
 	
 	@Column(name="email", nullable = false, unique = true)
 	private String email;
-<<<<<<< HEAD
-
-	//private Set<GrantedAuthority> authorities;
-	
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return new ArrayList<>();
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return password;
-	}
-
-	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return username;
-	}
-=======
 	
 	@OneToMany(mappedBy = "initUser", fetch = FetchType.LAZY)
 	private Set<SeeFirst> seeFirst = new HashSet<>();
@@ -177,6 +122,4 @@ public class User implements UserDetails {
 //
 //	}
 	
->>>>>>> 15e7e91b11090bfb4d046836710a3f3bdabc1e95
 }
-
