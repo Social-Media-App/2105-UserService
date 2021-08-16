@@ -1,0 +1,49 @@
+server:
+  port: 9082
+  
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9999/eureka
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    instance-id: ${spring.application.name}:${random.value}
+    preferIpAddress: true
+    
+spring:
+  application:
+    name: social-media-cloud-gateway
+  cloud:
+    gateway:
+      routes:
+      - id: post-service
+        uri: lb://post-service
+        predicates:
+        - Path= /post/**
+      - id: post-service
+        uri: lb://post-service
+        predicates:
+        - Path= /comment/**
+      - id: post-service
+        uri: lb://post-service
+        predicates:
+        - Path= /likes/**
+      - id: user-service
+        uri: lb://user-service
+        predicates:
+        - Path= /login-service/**
+      - id: user-service
+        uri: lb://user-service
+        predicates:
+        - Path= /user-service/**
+      - id: user-service
+        uri: lb://user-service
+        predicates:
+        - Path= /group-service/**
+
+        
+        
+        
+        
+    
