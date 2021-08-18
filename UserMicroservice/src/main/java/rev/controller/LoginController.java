@@ -1,6 +1,8 @@
 package rev.controller;
 
-import java.util.List;
+import java.security.NoSuchAlgorithmException;
+
+import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 <<<<<<< HEAD
@@ -15,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetails;
+<<<<<<< HEAD
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,7 +28,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 >>>>>>> 15e7e91b11090bfb4d046836710a3f3bdabc1e95
+=======
+import org.springframework.web.bind.annotation.CrossOrigin;
+>>>>>>> ca49075771cebad398e4c88c4414a25a85e1e727
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,19 +44,28 @@ import rev.model.AuthenticationResponse;
 =======
 import rev.model.JwtRequest;
 import rev.model.JwtResponse;
+<<<<<<< HEAD
 import rev.model.SeeFirst;
 >>>>>>> 15e7e91b11090bfb4d046836710a3f3bdabc1e95
+=======
+>>>>>>> ca49075771cebad398e4c88c4414a25a85e1e727
 import rev.model.User;
 import rev.service.MyUserDetailsService;
-import rev.service.SeeFirstService;
 import rev.service.UserService;
 <<<<<<< HEAD
 import rev.util.JwtUtil;
 =======
 import rev.utilities.JwtUtility;
+<<<<<<< HEAD
 >>>>>>> 15e7e91b11090bfb4d046836710a3f3bdabc1e95
+=======
+import rev.utilities.RandomToken;
+import rev.utilities.SendingMail;
+import rev.utilities.ToEncrypted;
+>>>>>>> ca49075771cebad398e4c88c4414a25a85e1e727
 
 @RestController
+@CrossOrigin(origins="http://localhost:3000", allowCredentials="true")
 @RequestMapping("/login-service")
 public class LoginController {
 	
@@ -98,6 +114,17 @@ public class LoginController {
 	 */
 	@PostMapping("/authenticate")
 	public JwtResponse authenticate(@RequestBody JwtRequest jwtRequest) throws Exception {
+		byte[] help = ToEncrypted.createSalt();
+		System.out.println(help);
+		System.out.println(ToEncrypted.generateHash(jwtRequest.getPassword(), help));
+		
+		User tempUser = userServ.findByUsername(jwtRequest.getUsername());
+		try {
+			jwtRequest.setPassword(ToEncrypted.generateHash(jwtRequest.getPassword(), tempUser.getSalt()));
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		try {
 		authenticationManager.authenticate(
@@ -126,6 +153,7 @@ public class LoginController {
 	 * @return user Object
 	 */
 	@PostMapping(value="/login")
+<<<<<<< HEAD
 	public @ResponseBody String login(@RequestBody User user) throws Exception{
 		System.out.println("Begining login");
 
@@ -153,6 +181,22 @@ public class LoginController {
 		return jwt;
 		
 		//return loguser;
+=======
+	public @ResponseBody User login(@RequestBody User user){
+		User tempUser = userServ.findByUsername(user.getUsername());
+		try {
+			user.setPassword(ToEncrypted.generateHash(user.getPassword(), tempUser.getSalt()));
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		User loguser = userServ.findByUsernameAndPassword(user.getUsername(),user.getPassword());
+		if (loguser == null) {
+			loguser = new User();
+			loguser.setUserId(-1);
+		}	
+		return loguser;
+>>>>>>> ca49075771cebad398e4c88c4414a25a85e1e727
 
 	}
 	/**
@@ -160,9 +204,20 @@ public class LoginController {
 	 * Creates a new user in the database and returns said user
 	 * @param User object
 	 * @return User object
+	 * @throws NoSuchAlgorithmException 
 	 */
 	@PostMapping(value="/signup")
 	public @ResponseBody User newUser(@RequestBody User user){
+		System.out.println(user);
+		if (userServ.existsByUserName(user.getUsername()) && userServ.existsByEmail(user.getEmail()))
+			return new User(-1);
+		user.setSalt(ToEncrypted.createSalt());
+		try {
+			user.setPassword(ToEncrypted.generateHash(user.getPassword(), user.getSalt()));
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return userServ.save(user);
 	}
 	/**
@@ -174,11 +229,58 @@ public class LoginController {
 	public @ResponseBody User resetPW(@RequestBody User user){
 		System.out.println("reset pw");
 		User updateuser = userServ.findByUserId(user.getUserId());
-		updateuser.setPassword(user.getPassword());
-		return userServ.save(updateuser);
+		if(updateuser.getResetToken().equals(user.getResetToken()))
+		{
+			try {
+				updateuser.setPassword(ToEncrypted.generateHash(user.getPassword(), updateuser.getSalt()));
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			}
+			updateuser.setResetToken(RandomToken.randomToken());
+			return userServ.save(updateuser);
+		}
+		return new User(-1);
 	}
 	
+	/**
+	 * @author Matthew
+	 * 
+	 * Gets a uesername request body from the front end.
+	 * 
+	 * @param username
+	 * @return If username exists, return 1; else return -1
+	 */
+	@PostMapping(value="/send-email")
+	public Integer sendEmail(@RequestBody User username) {
+		User userWhoForgotPass = userServ.findByUsername(username.getUsername());
+		if(userWhoForgotPass == null) return -1; //Username doesnt exist
+		String token = RandomToken.randomToken();
+		userWhoForgotPass.setResetToken(token);
+		userServ.save(userWhoForgotPass);
+		try {
+			SendingMail.sendMail(userWhoForgotPass.getEmail(), userWhoForgotPass.getUsername(),token);
+		} catch (MessagingException e) {
+			System.out.println("Error occured");
+			e.printStackTrace();
+		}
+		User forgotPassUser1 = userServ.findByUsername(username.getUsername());
+		System.out.println(forgotPassUser1);
+		return 1;	
+	}
 	
+	/**
+	 * @author Matthew
+	 * 
+	 * Gets a uesername request body from the front end.
+	 * 
+	 * @param username
+	 * @return If username exists, return 1; else return -1
+	 */
+	@PutMapping(value="/reset-pass")
+	public Integer resetPass(@RequestBody User userWhoForgotPass) {
+		System.out.println(userWhoForgotPass.toString());
+		return userServ.resetPass(userWhoForgotPass);
+	}
 	
 }
 

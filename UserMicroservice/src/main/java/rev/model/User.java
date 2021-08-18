@@ -1,12 +1,15 @@
 package rev.model;
 
 import java.util.ArrayList;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.JoinColumn;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,6 +20,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -60,8 +64,13 @@ public class User {
 	@Column(name="last_name", nullable = false)
 	private String lastName;
 	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(name="password", nullable = false)
 	private String password;
+	
+	@ElementCollection
+    @OrderColumn(name = "user_salt", nullable = false)
+    private byte[] salt;
 	
 	@Column(name="profile_picture", nullable = false)
 	@ColumnDefault(value="'Default.png'")
@@ -74,21 +83,24 @@ public class User {
 	@Column(name="email", nullable = false, unique = true)
 	private String email;
 	
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@Column(name="reset_token")
+	private String resetToken;
+	
+	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	@JoinColumn(name="group_list")
+	private List<Group> groupList = new ArrayList<>();
+//	private List<User> groupList = new ArrayList<>();
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="createdByUser")
+	private List<Group> myCreatedGroups = new ArrayList<>();
+
 	@OneToMany(mappedBy = "initUser", fetch = FetchType.LAZY)
 	private Set<SeeFirst> seeFirst = new HashSet<>();
-
-
 	
-//	@JoinTable(name="see_first",
-//			joinColumns={@JoinColumn(name="see_id")},
-//			inverseJoinColumns={@JoinColumn(name="seen_id")})
-//	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	private Set<User> seeFirst = new HashSet<User>();
-//	
-//	
-//	@JsonProperty(access = Access.WRITE_ONLY)
-//	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "seeFirst", cascade = CascadeType.ALL)
-//	private Set<User> beingSeen = new HashSet<User>();
+
+
+
 	
 	
 
@@ -100,6 +112,7 @@ public class User {
 		this.password = password;
 		this.email = email;
 	}
+
 	public User(int userId, String username, String firstName, String middleName, String lastName, String password,
 			String profilePicture, String backgroundPicture, String email) {
 		super();
@@ -113,7 +126,43 @@ public class User {
 		this.backgroundPicture = backgroundPicture;
 		this.email = email;
 	}
+	
+	
+	public User(int userId, String username, String firstName, String middleName, String lastName, String password,
+			byte[] salt, String profilePicture, String backgroundPicture, String email) {
+		super();
+		this.userId = userId;
+		this.username = username;
+		this.firstName = firstName;
+		this.middleName = middleName;
+		this.lastName = lastName;
+		this.password = password;
+		this.salt = salt;
+		this.profilePicture = profilePicture;
+		this.backgroundPicture = backgroundPicture;
+		this.email = email;
+	}
 
+	
+
+	public User(int userId, String username, String firstName, String middleName, String lastName, String password,
+			byte[] salt, String profilePicture, String backgroundPicture, String email, String resetToken) {
+		super();
+		this.userId = userId;
+		this.username = username;
+		this.firstName = firstName;
+		this.middleName = middleName;
+		this.lastName = lastName;
+		this.password = password;
+		this.salt = salt;
+		this.profilePicture = profilePicture;
+		this.backgroundPicture = backgroundPicture;
+		this.email = email;
+		this.resetToken = resetToken;
+	}
+	
+	
+	
 	public User(int userId) {
 		super();
 		this.userId = userId;
@@ -122,4 +171,30 @@ public class User {
 //
 //	}
 	
+<<<<<<< HEAD
 }
+=======
+	//@JsonIgnore
+	public String getPassword() {
+		return this.password;	
+	}
+	
+	//@JsonIgnore
+	public String getResetToken() {
+		return this.resetToken;
+	}
+	
+	@JsonIgnore
+	public byte[] getSalt() {
+		return salt;
+	}
+
+
+
+
+
+
+	
+}
+
+>>>>>>> ca49075771cebad398e4c88c4414a25a85e1e727
