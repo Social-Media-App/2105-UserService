@@ -85,7 +85,15 @@ public class UserController {
 	@PostMapping(value="/update")
 	public @ResponseBody User updateUser(@RequestHeader("Authorization") String header, @RequestBody User user){
 		System.out.println("Update User");
-		return userServ.save(user);
+        User updatedUser = userServ.findByUserId(user.getUserId());
+        updatedUser.setEmail(user.getEmail());
+        updatedUser.setFirstName(user.getFirstName());
+        updatedUser.setLastName(user.getLastName());
+        updatedUser.setMiddleName(user.getMiddleName());
+        updatedUser.setProfilePicture(user.getProfilePicture());
+        updatedUser.setBackgroundPicture(user.getBackgroundPicture());
+
+        return userServ.save(updatedUser);
 	}
 	
 	/**

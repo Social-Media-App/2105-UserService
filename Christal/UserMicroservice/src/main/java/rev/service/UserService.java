@@ -80,5 +80,6 @@ public interface UserService {
 	
 	public Boolean existsByUserName(String userName);
 	public Boolean existsByEmail(String email);
+	public int resetPass(User userWhoForgotPass);
 
 }
