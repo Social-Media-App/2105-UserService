@@ -1,7 +1,6 @@
 package rev.controller;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import javax.mail.MessagingException;
 
@@ -10,7 +9,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,10 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import rev.model.JwtRequest;
 import rev.model.JwtResponse;
-import rev.model.SeeFirst;
 import rev.model.User;
 import rev.service.MyUserDetailsService;
-import rev.service.SeeFirstService;
 import rev.service.UserService;
 import rev.utilities.JwtUtility;
 import rev.utilities.RandomToken;
@@ -29,6 +28,7 @@ import rev.utilities.SendingMail;
 import rev.utilities.ToEncrypted;
 
 @RestController
+@CrossOrigin(origins="http://localhost:3000", allowCredentials="true")
 @RequestMapping("/login-service")
 public class LoginController {
 	
@@ -165,32 +165,45 @@ public class LoginController {
 		return new User(-1);
 	}
 	
+	/**
+	 * @author Matthew
+	 * 
+	 * Gets a uesername request body from the front end.
+	 * 
+	 * @param username
+	 * @return If username exists, return 1; else return -1
+	 */
 	@PostMapping(value="/send-email")
 	public Integer sendEmail(@RequestBody User username) {
-		System.out.println(username);
-		User forgotPassUser = userServ.findByUsername(username.getUsername());
-		if(forgotPassUser == null) return -1;
+		User userWhoForgotPass = userServ.findByUsername(username.getUsername());
+		if(userWhoForgotPass == null) return -1; //Username doesnt exist
 		String token = RandomToken.randomToken();
-		forgotPassUser.setResetToken(token);
-		userServ.save(forgotPassUser);
-		//
-		/* add logic to change stored token */
-		//
+		userWhoForgotPass.setResetToken(token);
+		userServ.save(userWhoForgotPass);
 		try {
-			//Passes email and the session's token to SendEmail class
-			//this sends the reset password to the email + the token for security verification
-			SendingMail.sendMail(forgotPassUser.getEmail(), forgotPassUser.getUsername(),token);
-			
-//			loggy.info("A token has been sent to " + forgotPassUser.getEmail());
+			SendingMail.sendMail(userWhoForgotPass.getEmail(), userWhoForgotPass.getUsername(),token);
 		} catch (MessagingException e) {
 			System.out.println("Error occured");
-//			loggy.error("Error sending the mail (controllerUserEmail): ", e);
 			e.printStackTrace();
 		}
+		User forgotPassUser1 = userServ.findByUsername(username.getUsername());
+		System.out.println(forgotPassUser1);
 		return 1;	
 	}
 	
-	
+	/**
+	 * @author Matthew
+	 * 
+	 * Gets a uesername request body from the front end.
+	 * 
+	 * @param username
+	 * @return If username exists, return 1; else return -1
+	 */
+	@PutMapping(value="/reset-pass")
+	public Integer resetPass(@RequestBody User userWhoForgotPass) {
+		System.out.println(userWhoForgotPass.toString());
+		return userServ.resetPass(userWhoForgotPass);
+	}
 	
 
 }

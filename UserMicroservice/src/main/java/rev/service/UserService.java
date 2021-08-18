@@ -66,6 +66,20 @@ public interface UserService {
 	 */
 	public User save(User user);
 	
+	//////////////UPDATTE\\\\\\\\\\\\\\
+	/**
+	 * @author Matthew
+	 * 
+	 * Accepts a user object containing a username, password
+	 * and token. If user exists and tokens match, password will be reset.
+	 * 
+	 * @param User
+	 * @return 1= success, -1= no matching user, -2= invalid token, -3= same password
+	 */
+	public int resetPass(User userWhoForgotPass);
+	
+	
+	
 	//////////////DELETE\\\\\\\\\\\\\\
 	/**
 	 * @author zacha
