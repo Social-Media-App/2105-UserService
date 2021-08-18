@@ -99,8 +99,16 @@ public class User {
 	private Set<SeeFirst> seeFirst = new HashSet<>();
 	
 
-
-
+	public User(int userId, String username, String firstName, String lastName, String password, String email) {
+		super();
+		this.userId = userId;
+		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.password = password;
+		this.email = email;
+	}
+	
 	
 	
 

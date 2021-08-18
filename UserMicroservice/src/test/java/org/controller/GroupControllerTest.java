@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import rev.UserMicroserviceApplication;
 import rev.controller.GroupController;
 import rev.model.Group;
+import rev.model.User;
 import rev.service.GroupService;
 
 @SpringBootTest(classes=UserMicroserviceApplication.class)
@@ -36,13 +37,13 @@ class GroupControllerTest {
 	void createGroup() {
 //		fail("Not yet implemented");
 		// ARRANGE
-		Group initialGroup = new Group(0,"our group");
-		Group expectedGroup = new Group(0,"our group");
+		Group initialGroup = new Group(0,"our group", new User(1));
+		Group expectedGroup = new Group(0,"our group", new User(1));
 		when(myServ.save(initialGroup)).thenReturn(initialGroup);
 		System.out.println(initialGroup);
 		
 		// ACT
-		Group actualGroup = myController.createGroup("person", initialGroup);
+		Group actualGroup = myController.createGroup("person1234567", initialGroup);
 		System.out.println(expectedGroup);
 		
 		// ASSERT

@@ -48,6 +48,13 @@ public class Group {
 	
 	@ManyToMany(cascade= CascadeType.ALL, fetch= FetchType.EAGER, mappedBy = "groupList" )
 	private List<User> members = new ArrayList<>();
+	
+	public Group(int groupId, String groupName, User createdByUser) {
+		super();
+		this.groupId = groupId;
+		this.groupName = groupName;
+		this.createdByUser = createdByUser;
+	}
 
 	public Group(int groupId, String groupName) {
 		super();
@@ -72,6 +79,8 @@ public class Group {
 			
 		return names;
 	}
+
+	
 
 	
  
