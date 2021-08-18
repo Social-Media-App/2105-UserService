@@ -37,7 +37,7 @@ class GroupControllerTest {
 	void createGroup() {
 //		fail("Not yet implemented");
 		// ARRANGE
-		Group initialGroup = new Group(0,"our group", new User(1));
+		Group initialGroup = new Group(0,"our group", new User(1,"jason12345","Jason", "White",));
 		Group expectedGroup = new Group(0,"our group", new User(1));
 		when(myServ.save(initialGroup)).thenReturn(initialGroup);
 		System.out.println(initialGroup);

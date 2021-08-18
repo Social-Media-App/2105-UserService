@@ -87,8 +87,8 @@ public class GroupController {
 	@PostMapping(value="/create-new-group")
 	public @ResponseBody Group createGroup(@RequestHeader("Authorization") String header, @RequestBody Group newGroup) {
 		System.out.println("in the create group post method");
-		header = header.substring(7);
-		header = jwtUtility.getUsernameFromToken(header);
+//		header = header.substring(7);
+//		header = jwtUtility.getUsernameFromToken(header);
 		newGroup.setCreatedByUser(userServ.findByUsername(header));
 		return groupServ.save(newGroup);
 //		return "created new group";
