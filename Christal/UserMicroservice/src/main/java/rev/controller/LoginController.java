@@ -25,6 +25,7 @@ import rev.model.User;
 import rev.service.MyUserDetailsService;
 import rev.service.SeeFirstService;
 import rev.service.UserService;
+import rev.utilities.EventLogger;
 import rev.utilities.JwtUtility;
 import rev.utilities.RandomToken;
 import rev.utilities.SendingMail;
@@ -119,9 +120,11 @@ public class LoginController {
 		}
 		User loguser = userServ.findByUsernameAndPassword(user.getUsername(),user.getPassword());
 		if (loguser == null) {
+			EventLogger.loggy.info("Failed to login!!!!");
 			loguser = new User();
 			loguser.setUserId(-1);
 		}	
+		EventLogger.loggy.info(loguser.getUsername() + " just logged in!!!!");
 		return loguser;
 
 	}
